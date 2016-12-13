@@ -2,7 +2,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require 'base32/crockford'
 
 spec = Gem::Specification.new do |s|
-  s.name = 'base32-crockford'
+  s.name = 'base32-crockford-checksum'
   s.version = Base32::Crockford::VERSION
   s.summary = "32-symbol notation for expressing numbers in a form that can be conveniently and accurately transmitted between humans"
 
