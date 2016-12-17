@@ -41,16 +41,18 @@ end
 #
 #
 class Base32::Crockford
-  VERSION = "0.2.2"
+  VERSION = "0.2.3"
 
   ENCODE_CHARS =
     %w(0 1 2 3 4 5 6 7 8 9 A B C D E F G H J K M N P Q R S T V W X Y Z ?)
 
-  CHECKSUM_MAP = { "*" => 32, "~" => 33, "$" => 34, "=" => 35, "U" => 36 }
-
   DECODE_MAP = ENCODE_CHARS.to_enum(:each_with_index).inject({}) do |h,(c,i)|
     h[c] = i; h
   end.merge({'I' => 1, 'L' => 1, 'O' => 0})
+
+  CHECKSUM_CHARS = %w(* ~ $ = U)
+
+  CHECKSUM_MAP = { "*" => 32, "~" => 33, "$" => 34, "=" => 35, "U" => 36 }
 
   # encodes an integer into a string
   #
@@ -75,7 +77,7 @@ class Base32::Crockford
       ENCODE_CHARS[bits.reverse.to_i(2)]
     end.reverse.join
 
-    str = str + ENCODE_CHARS[number % 37] if opts[:checksum]
+    str = str + (ENCODE_CHARS + CHECKSUM_CHARS)[number % 37] if opts[:checksum]
 
     str = str.rjust(opts[:length], '0') if opts[:length]
 
