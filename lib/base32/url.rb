@@ -40,7 +40,7 @@ end
 # hyphens to assure symbol string correctness.
 #
 #
-class Base32::Url
+class Base32::URL
   ENCODE_CHARS =
     %w(0 1 2 3 4 5 6 7 8 9 a b c d e f g h j k m n p q r s t v w x y z ?)
 
@@ -64,8 +64,8 @@ class Base32::Url
   # when +length+ is given, the resulting string is zero-padded to be exactly
   # this number of characters long (hyphens are ignored)
   #
-  #   Base32::Crockford.encode(1234) # => "16J"
-  #   Base32::Crockford.encode(123456789012345, :split=>5) # => "3G923-0VQVS"
+  #   Base32::URL.encode(1234) # => "16j"
+  #   Base32::URL.encode(123456789012345, :split=>5) # => "3g923-0vqvs"
   #
   def self.encode(number, opts = {})
     # verify options
@@ -75,7 +75,7 @@ class Base32::Url
       ENCODE_CHARS[bits.reverse.to_i(2)]
     end.reverse.join
 
-    str = str + (ENCODE_CHARS + CHECKSUM_CHARS)[number % 37] if opts[:checksum]
+    str += (ENCODE_CHARS + CHECKSUM_CHARS)[number % 37] if opts[:checksum]
 
     str = str.rjust(opts[:length], '0') if opts[:length]
 
@@ -113,7 +113,7 @@ class Base32::Url
       DECODE_MAP[char] or return nil
     }.inject(0) { |result,val| (result << 5) + val }
 
-    number % 37 == checksum_number or return nil if opts[:checksum]
+    return nil if opts[:checksum] && (number % 37 != checksum_number)
 
     number
   end
@@ -132,11 +132,11 @@ class Base32::Url
   def self.normalize(string, opts = {})
     checksum_char = string.slice!(-1) if opts[:checksum]
 
-    string = clean(string).split(//).map { |char|
+    string = clean(string).split(//).map do |char|
       ENCODE_CHARS[DECODE_MAP[char] || 32]
-    }.join
+    end.join
 
-    string = string + checksum_char if opts[:checksum]
+    string += checksum_char if opts[:checksum]
 
     string
   end
