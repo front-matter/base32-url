@@ -6,9 +6,7 @@ install:
 script: bundle exec rake
 deploy:
   provider: rubygems
-  api_key:
-    secure: tFWk9ydCPbprtN9s/tooTArCkkOGtD2b5vV8O3yOqpMBpdV1O1wERNbAj4NCjQJ8Hshe4DBp857JlEs3+8rnh0WMbOQgBNWQpGd6u22+YKSuIYchEmxnWAoYif6k6/TfYO1vmwI6/9sFqBfRu1k2/kZxAHG1M0VyolIYWGUDwXUY+u3pwStOAUH01nb3bHmjhc5SJ2kETAGAOIW4LPSJ/826IoOVIwqq+9VJnMR/tZmMf5uXIbEE9OWu883+L7y6nkBtn0528EZav7BATa4QB+mmaa0atIrsgGymEpheADhmWcUKTSydwOO+txuR/zar3E1p5ELyfI465QuPAt6f4/zfAQOyMb9SeKqo91Y/O9k9DG9GXaZs88oZdqWcceIMDbKmQoiL4szz2Skl1Rqmzlk13RGrRvsNYjxEFpIraKPnYK52utiu9VeZlAOBPsIUYPilVCYhxFumiOzPYfFXGi47Sk3vdu+3eB+q5mJz6AHkMuBVjIbU43lXcT0QIJ9xJfGjVjSA5XgmyA7oxAma8z2WXPKGnw6FRIb3o9RoytV/TFRueRfEC+4oHHWDINMH11iMOr+H6Ia0owehn3Hubo6uRnWyRzOBpG8jzywbt5jt5gwJRGYzHzDcpJScZiuB2iPmKnoxj6wAi3yhFxTIQwN4AtRhCPU9cIX6XM7TxRM=
-  gem: base32-crockford-checksum
+  gem: base32-url
   on:
     tags: true
-    repo: datacite/base32
+    repo: datacite/base32-url

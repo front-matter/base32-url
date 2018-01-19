@@ -1,11 +1,18 @@
-An implementation of Douglas Crockfords Base32-Encoding in Ruby
+[![Gem Version](https://badge.fury.io/rb/base32-url.svg)](https://badge.fury.io/rb/base32-url)
+[![Build Status](https://travis-ci.org/datacite/base32-url.svg?branch=master)](https://travis-ci.org/datacite/base32-url)
+
+An implementation of Douglas Crockfords Base32-Encoding in Ruby, with two modifications to make
+the resulting strings more URL friendly:
+
+* use lower case characters
+* only use characters that don't need URL encoding for checksum
 
 see <http://www.crockford.com/wrmg/base32.html>
 
 Installation
 ============
 
-    $ gem install base32-crockford
+    $ gem install base32-url
 
 Changes
 =======

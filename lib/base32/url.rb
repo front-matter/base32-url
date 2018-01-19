@@ -28,7 +28,7 @@ end
 # U:: Accidental obscenity
 #
 # When decoding, upper and lower case letters are accepted, and i and l will
-# be treated as 1 and o will be treated as 0. When encoding, only upper case
+# be treated as 1 and o will be treated as 0. When encoding, lower upper case
 # letters are used.
 #
 # If the bit-length of the number to be encoded is not a multiple of 5 bits,
@@ -40,19 +40,17 @@ end
 # hyphens to assure symbol string correctness.
 #
 #
-class Base32::Crockford
-  VERSION = "0.2.3"
-
+class Base32::Url
   ENCODE_CHARS =
-    %w(0 1 2 3 4 5 6 7 8 9 A B C D E F G H J K M N P Q R S T V W X Y Z ?)
+    %w(0 1 2 3 4 5 6 7 8 9 a b c d e f g h j k m n p q r s t v w x y z ?)
 
   DECODE_MAP = ENCODE_CHARS.to_enum(:each_with_index).inject({}) do |h,(c,i)|
     h[c] = i; h
-  end.merge({'I' => 1, 'L' => 1, 'O' => 0})
+  end.merge({'i' => 1, 'l' => 1, 'o' => 0})
 
-  CHECKSUM_CHARS = %w(* ~ $ = U)
+  CHECKSUM_CHARS = %w(* ~ _ ^ u)
 
-  CHECKSUM_MAP = { "*" => 32, "~" => 33, "$" => 34, "=" => 35, "U" => 36 }
+  CHECKSUM_MAP = { "*" => 32, "~" => 33, "_" => 34, "^" => 35, "u" => 36 }
 
   # encodes an integer into a string
   #
@@ -152,9 +150,8 @@ class Base32::Crockford
 
   class << self
     def clean(string)
-      string.gsub(/-/,'').upcase
+      string.gsub(/-/,'').downcase
     end
     private :clean
   end
 end
-
