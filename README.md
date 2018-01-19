@@ -29,8 +29,8 @@ $ gem install base32-url
 
 require 'base32/url'
 
-Base32::Url.encode(1234)                            # => "16J"
-Base32::Url.encode(100**10, :split=>5, :length=>15) # => "02PQH-TY5NH-H0000"
-Base32::Url.decode("2pqh-ty5nh-hoooo")              # => 10**100
-Base32::Url.encode(1234, checksum: true)            # => "16JD"
-Base32::Url.decode("16JD", checksum: true)          # => 1234
+Base32::URL.encode(1234)                            # => "16j"
+Base32::URL.encode(100**10, :split=>5, :length=>15) # => "02pqh-ty5nh-h0000"
+Base32::URL.decode("2pqh-ty5nh-hoooo")              # => 10**100
+Base32::URL.encode(1234, checksum: true)            # => "16jd"
+Base32::URL.decode("16jd", checksum: true)          # => 1234
