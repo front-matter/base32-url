@@ -48,15 +48,15 @@ class Base32::URL
     h[c] = i; h
   end.merge({'i' => 1, 'l' => 1, 'o' => 0})
 
-  CHECKSUM_CHARS = %w(* ~ _ ^ u)
+  CHECKSUM_CHARS = %w(i l o u)
 
-  CHECKSUM_MAP = { "*" => 32, "~" => 33, "_" => 34, "^" => 35, "u" => 36 }
+  CHECKSUM_MAP = { "i" => 32, "l" => 33, "o" => 34, "u" => 35 }
 
   # encodes an integer into a string
   #
   # when +checksum+ is given, a checksum is added at the end of the the string,
-  # calculated as modulo 37 of +number+. Five additional checksum symbols are
-  # used for symbol values 32-36
+  # calculated as modulo 36 of +number+. Four additional checksum symbols are
+  # used for symbol values 32-35
   #
   # when +split+ is given a hyphen is inserted every <n> characters to improve
   # readability
@@ -75,7 +75,7 @@ class Base32::URL
       ENCODE_CHARS[bits.reverse.to_i(2)]
     end.reverse.join
 
-    str += (ENCODE_CHARS + CHECKSUM_CHARS)[number % 37] if opts[:checksum]
+    str += (ENCODE_CHARS + CHECKSUM_CHARS)[number % 36] if opts[:checksum]
 
     str = str.rjust(opts[:length], '0') if opts[:length]
 
@@ -113,7 +113,7 @@ class Base32::URL
       DECODE_MAP[char] or return nil
     }.inject(0) { |result,val| (result << 5) + val }
 
-    return nil if opts[:checksum] && (number % 37 != checksum_number)
+    return nil if opts[:checksum] && (number % 36 != checksum_number)
 
     number
   end

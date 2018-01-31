@@ -73,21 +73,21 @@ class TestBase32Url < Test::Unit::TestCase
   end
 
   def test_encoding_checksum
-    assert_equal "16jd",
+    assert_equal "16ja",
       Base32::URL.encode(1234, :checksum => true)
-    assert_equal "016jd",
+    assert_equal "016ja",
       Base32::URL.encode(1234, :length => 5, :checksum => true)
-    assert_equal "0-16-jd",
+    assert_equal "0-16-ja",
       Base32::URL.encode(1234, :length => 5, :split => 2, :checksum => true)
   end
 
   def test_decoding_checksum
     assert_equal 1234,
-      Base32::URL.decode("16jd", :checksum => true)
+      Base32::URL.decode("16ja", :checksum => true)
     assert_equal 1234,
-      Base32::URL.decode("016jd", :length => 5, :checksum => true)
+      Base32::URL.decode("016ja", :length => 5, :checksum => true)
     assert_equal 1234,
-      Base32::URL.decode("0-16-jd", :length => 5, :split => 2, :checksum => true)
+      Base32::URL.decode("0-16-ja", :length => 5, :split => 2, :checksum => true)
   end
 
   def test_decoding_invalid_checksum
