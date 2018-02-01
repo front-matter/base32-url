@@ -21,7 +21,7 @@ class TestBase32Url < Test::Unit::TestCase
   end
 
   def test_decoding_strings
-    assert_equal(1234, Base32::URL.decode("16J"))
+    assert_equal(1234, Base32::URL.decode("16j"))
   end
 
   def test_decoding_normalizes_symbols
@@ -50,8 +50,8 @@ class TestBase32Url < Test::Unit::TestCase
   end
 
   def test_normalize_with_checksum
-    assert_equal "b?123", Base32::URL.normalize("BU-123", :checksum => true)
-    assert_equal "b123u", Base32::URL.normalize("B123u", :checksum => true)
+    assert_equal "b?1223", Base32::URL.normalize("BU-123", :checksum => true)
+    assert_equal "b1223", Base32::URL.normalize("B123", :checksum => true)
   end
 
   def test_valid
@@ -73,25 +73,25 @@ class TestBase32Url < Test::Unit::TestCase
   end
 
   def test_encoding_checksum
-    assert_equal "16ja",
+    assert_equal "16j82",
       Base32::URL.encode(1234, :checksum => true)
-    assert_equal "016ja",
-      Base32::URL.encode(1234, :length => 5, :checksum => true)
-    assert_equal "0-16-ja",
-      Base32::URL.encode(1234, :length => 5, :split => 2, :checksum => true)
+    assert_equal "016j82",
+      Base32::URL.encode(1234, :length => 6, :checksum => true)
+    assert_equal "01-6j-82",
+      Base32::URL.encode(1234, :length => 6, :split => 2, :checksum => true)
   end
 
   def test_decoding_checksum
     assert_equal 1234,
-      Base32::URL.decode("16ja", :checksum => true)
+      Base32::URL.decode("16j82", :checksum => true)
     assert_equal 1234,
-      Base32::URL.decode("016ja", :length => 5, :checksum => true)
+      Base32::URL.decode("016j82", :length => 6, :checksum => true)
     assert_equal 1234,
-      Base32::URL.decode("0-16-ja", :length => 5, :split => 2, :checksum => true)
+      Base32::URL.decode("01-6j-82", :length => 6, :split => 2, :checksum => true)
   end
 
   def test_decoding_invalid_checksum
     assert_equal nil,
-      Base32::URL.decode("16jc", :checksum => true)
+      Base32::URL.decode("16j44", :checksum => true)
   end
 end

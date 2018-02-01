@@ -9,26 +9,22 @@ require 'enumerator'
 module Base32
 end
 
-# encode a value with the encoding defined by _Douglas_ _Crockford_ in
-# <http://www.crockford.com/wrmg/base32.html>
-#
 # this is *not* the same as the Base32 encoding defined in RFC 4648
-#
 #
 # The Base32 symbol set is a superset of the Base16 symbol set.
 #
 # We chose a symbol set of 10 digits and 22 letters. We exclude 4 of the 26
-# letters: I L O U.
+# letters: i l o u.
 #
 # Excluded Letters
 #
-# I:: Can be confused with 1
-# L:: Can be confused with 1
-# O:: Can be confused with 0
-# U:: Accidental obscenity
+# i:: Can be confused with 1
+# l:: Can be confused with 1
+# o:: Can be confused with 0
+# u:: Accidental obscenity
 #
 # When decoding, upper and lower case letters are accepted, and i and l will
-# be treated as 1 and o will be treated as 0. When encoding, lower upper case
+# be treated as 1 and o will be treated as 0. When encoding, lower case
 # letters are used.
 #
 # If the bit-length of the number to be encoded is not a multiple of 5 bits,
@@ -44,19 +40,15 @@ class Base32::URL
   ENCODE_CHARS =
     %w(0 1 2 3 4 5 6 7 8 9 a b c d e f g h j k m n p q r s t v w x y z ?)
 
-  DECODE_MAP = ENCODE_CHARS.to_enum(:each_with_index).inject({}) do |h,(c,i)|
-    h[c] = i; h
+  DECODE_MAP = ENCODE_CHARS.to_enum(:each_with_index).reduce({}) do |hsh, (c,i)|
+    hsh[c] = i
+    hsh
   end.merge({'i' => 1, 'l' => 1, 'o' => 0})
-
-  CHECKSUM_CHARS = %w(i l o u)
-
-  CHECKSUM_MAP = { "i" => 32, "l" => 33, "o" => 34, "u" => 35 }
 
   # encodes an integer into a string
   #
   # when +checksum+ is given, a checksum is added at the end of the the string,
-  # calculated as modulo 36 of +number+. Four additional checksum symbols are
-  # used for symbol values 32-35
+  # calculated as modulo 97-10 (ISO 7064)
   #
   # when +split+ is given a hyphen is inserted every <n> characters to improve
   # readability
@@ -75,7 +67,10 @@ class Base32::URL
       ENCODE_CHARS[bits.reverse.to_i(2)]
     end.reverse.join
 
-    str += (ENCODE_CHARS + CHECKSUM_CHARS)[number % 36] if opts[:checksum]
+    if opts[:checksum]
+      remainder = 98 - ((number * 100) % 97)
+      str += sprintf("%02d", remainder)
+    end
 
     str = str.rjust(opts[:length], '0') if opts[:length]
 
@@ -96,30 +91,29 @@ class Base32::URL
   #   I,i,l,L decodes to 1
   #   O,o decodes to 0
   #
-  #   Base32::Crockford.decode("16J") # => 1234
-  #   Base32::Crockford.decode("OI") # => 1
-  #   Base32::Crockford.decode("3G923-0VQVS") # => 123456789012345
+  #   Base32::URL.decode("16J") # => 1234
+  #   Base32::URL.decode("OI") # => 1
+  #   Base32::URL.decode("3G923-0VQVS") # => 123456789012345
   #
   # returns +nil+ if the string contains invalid characters and can't be
   # decoded, or if checksum option is used and checksum is incorrect
-  #
+
   def self.decode(string, opts = {})
-    if opts[:checksum]
-      checksum_char = string.slice!(-1)
-      checksum_number = DECODE_MAP.merge(CHECKSUM_MAP)[checksum_char]
-    end
+    string, checksum = string[0..-3], string[-2..-1].to_i if opts[:checksum]
 
     number = clean(string).split(//).map { |char|
       DECODE_MAP[char] or return nil
     }.inject(0) { |result,val| (result << 5) + val }
 
-    return nil if opts[:checksum] && (number % 36 != checksum_number)
+    if opts[:checksum]
+      remainder = 98 - ((number * 100) % 97)
+      return nil if remainder != checksum
+    end
 
     number
   end
 
   # same as decode, but raises ArgumentError when the string can't be decoded
-  #
   def self.decode!(string, opts = {})
     decode(string) or raise ArgumentError
   end
@@ -130,13 +124,16 @@ class Base32::URL
   # replaces invalid characters with a question mark ('?')
   #
   def self.normalize(string, opts = {})
-    checksum_char = string.slice!(-1) if opts[:checksum]
+    if opts[:checksum]
+      checksum = string.split(//).last(2).join
+      string = string[0..-2]
+    end
 
     string = clean(string).split(//).map do |char|
       ENCODE_CHARS[DECODE_MAP[char] || 32]
     end.join
 
-    string += checksum_char if opts[:checksum]
+    string += checksum if opts[:checksum]
 
     string
   end
