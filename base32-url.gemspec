@@ -13,16 +13,16 @@ Gem::Specification.new do |s|
   s.version       = Base32::Url::VERSION
   s.extra_rdoc_files = ['README.md']
   s.license = 'MIT'
-  s.required_ruby_version = '>= 2.2'
+  s.required_ruby_version = '>= 2.6.0'
 
   # Declary dependencies here, rather than in the Gemfile
-  s.add_development_dependency 'bundler', '>= 1.0'
-  s.add_development_dependency 'rake'
+  s.add_development_dependency 'bundler', '>= 1.11', "< 3"
+  s.add_development_dependency 'rake', '>= 11.3', "< 14"
   s.add_development_dependency 'rubocop', '~> 1.36'
   s.add_development_dependency 'rubocop-rake', '~> 0.6.0'
   s.add_development_dependency 'simplecov', '0.22.0'
   s.add_development_dependency 'simplecov_json_formatter', '~> 0.1.4'
-  s.add_development_dependency 'test-unit', '>= 3.2.3'
+  s.add_development_dependency 'test-unit', '~> 3.2', '>= 3.2.3'
 
   s.files = `git ls-files`.split($/)
   s.test_files = `git ls-files -- {test,spec,features}/*`.split("\n")
