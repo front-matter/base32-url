@@ -1,10 +1,9 @@
-# encoding: UTF-8
+# frozen_string_literal: true
+
 #
 # (c) 2008, Levin Alexander <http://levinalex.net>
 #
 # This file is released under the same license as ruby.
-
-require 'enumerator'
 
 module Base32
 end
@@ -38,12 +37,11 @@ end
 #
 class Base32::URL
   ENCODE_CHARS =
-    %w(0 1 2 3 4 5 6 7 8 9 a b c d e f g h j k m n p q r s t v w x y z ?)
+    %w[0 1 2 3 4 5 6 7 8 9 a b c d e f g h j k m n p q r s t v w x y z ?].freeze
 
-  DECODE_MAP = ENCODE_CHARS.to_enum(:each_with_index).reduce({}) do |hsh, (c,i)|
+  DECODE_MAP = ENCODE_CHARS.to_enum(:each_with_index).each_with_object({}) do |(c, i), hsh|
     hsh[c] = i
-    hsh
-  end.merge({'i' => 1, 'l' => 1, 'o' => 0})
+  end.merge({ 'i' => 1, 'l' => 1, 'o' => 0 })
 
   # encodes an integer into a string
   #
@@ -61,7 +59,7 @@ class Base32::URL
   #
   def self.encode(number, opts = {})
     # verify options
-    raise ArgumentError unless (opts.keys - [:length, :split, :checksum] == [])
+    raise ArgumentError unless opts.keys - %i[length split checksum] == []
 
     str = number.to_s(2).reverse.scan(/.{1,5}/).map do |bits|
       ENCODE_CHARS[bits.reverse.to_i(2)]
@@ -69,15 +67,15 @@ class Base32::URL
 
     if opts[:checksum]
       remainder = 98 - ((number * 100) % 97)
-      str += sprintf("%02d", remainder)
+      str += format('%02d', remainder)
     end
 
     str = str.rjust(opts[:length], '0') if opts[:length]
 
     if opts[:split]
       str = str.reverse
-      str = str.scan(/.{1,#{opts[:split]}}/).map { |x| x.reverse }
-      str = str.reverse.join("-")
+      str = str.scan(/.{1,#{opts[:split]}}/).map(&:reverse)
+      str = str.reverse.join('-')
     end
 
     str
@@ -99,11 +97,14 @@ class Base32::URL
   # decoded, or if checksum option is used and checksum is incorrect
 
   def self.decode(string, opts = {})
-    string, checksum = string[0..-3], string[-2..-1].to_i if opts[:checksum]
+    if opts[:checksum]
+      checksum = string[-2..].to_i
+      string = string[0..-3]
+    end
 
-    number = clean(string).split(//).map { |char|
+    number = clean(string).split(//).map do |char|
       DECODE_MAP[char] or return nil
-    }.inject(0) { |result,val| (result << 5) + val }
+    end.inject(0) { |result, val| (result << 5) + val }
 
     if opts[:checksum]
       remainder = 98 - ((number * 100) % 97)
@@ -114,7 +115,7 @@ class Base32::URL
   end
 
   # same as decode, but raises ArgumentError when the string can't be decoded
-  def self.decode!(string, opts = {})
+  def self.decode!(string, _opts = {})
     decode(string) or raise ArgumentError
   end
 
@@ -142,12 +143,12 @@ class Base32::URL
   # decoded
   #
   def self.valid?(string, opts = {})
-    !(normalize(string, opts) =~ /\?/)
+    (normalize(string, opts) !~ /\?/)
   end
 
   class << self
     def clean(string)
-      string.gsub(/-/,'').downcase
+      string.gsub(/-/, '').downcase
     end
     private :clean
   end
