@@ -1,5 +1,4 @@
 [![Gem Version](https://badge.fury.io/rb/base32-url.svg)](https://badge.fury.io/rb/base32-url)
-[![Build Status](https://travis-ci.org/datacite/base32-url.svg?branch=master)](https://travis-ci.org/datacite/base32-url)
 
 An implementation of Douglas Crockfords Base32-Encoding in Ruby, with two modifications to make
 the resulting strings more URL friendly:
@@ -18,6 +17,7 @@ $ gem install base32-url
 ## Changes
 
 ```
+0.6.0 - support Ruby versions beyond 2.x
 0.5.0 - use mod 97-10 (ISO 7064) to calculate checksum
 0.3.0 - encode into lower case characters, use * ~ _ ^ u for checksum
 0.2.0 - added optional checksum
