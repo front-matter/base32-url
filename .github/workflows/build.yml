@@ -22,9 +22,6 @@ jobs:
           gem install bundler
           bundle install
           bundle exec rake test
-      - name: Where Am I?
-        run: |
-          head coverage/coverage.json
       - name: fix code coverage paths
         working-directory: ./coverage
         run: |
