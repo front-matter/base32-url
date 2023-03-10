@@ -1,3 +1,6 @@
+[![Build](https://github.com/front-matter/base32-url/actions/workflows/build.yml/badge.svg)](https://github.com/front-matter/base32-url/actions/workflows/build.yml)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=front-matter_base32-url&metric=coverage)](https://sonarcloud.io/summary/new_code?id=front-matter_base32-url)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=front-matter_base32-url&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=front-matter_base32-url)
 [![Gem Version](https://badge.fury.io/rb/base32-url.svg)](https://badge.fury.io/rb/base32-url)
 
 An implementation of Douglas Crockfords Base32-Encoding in Ruby, with two modifications to make
