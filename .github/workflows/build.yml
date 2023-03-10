@@ -22,10 +22,10 @@ jobs:
           gem install bundler
           bundle install
           bundle exec rake test
-      - name: fix code coverage paths
-        working-directory: ./coverage
-        run: |
-          sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' .resultset.json
+      # - name: fix code coverage paths
+      #   working-directory: ./coverage
+      #   run: |
+      #     sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' .resultset.json
       - name: Upload coverage report
         uses: actions/upload-artifact@v3
         with:
